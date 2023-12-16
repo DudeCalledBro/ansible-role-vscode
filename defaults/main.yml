@@ -1,0 +1,6 @@
+# List of Visual Studio Code extensions (not listed will be removed)
+vscode_extensions: []
+
+# Configure Visual Studio Code
+vscode_settings_backup: false
+vscode_settings: {}

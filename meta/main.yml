@@ -1,0 +1,15 @@
+dependencies: []
+
+galaxy_info:
+  role_name: vscode
+  author: dudecalledbro
+  description: Ansible Role for Visual Studio Code on MacOS.
+  license: "license (MIT)"
+  min_ansible_version: "2.10"
+  platforms:
+  - name: MacOSX
+    versions:
+    - all
+
+  galaxy_tags:
+  - vscode

@@ -1,0 +1,30 @@
+- name: Install Visual Studio Code
+  community.general.homebrew_cask:
+    name: "visual-studio-code"
+    state: present
+
+- name: Determine installed Visual Studio Code Extensions
+  when: vscode_extensions | length
+  ansible.builtin.command: code --list-extensions
+  changed_when: false
+  register: vscode_extensions_list
+
+- name: Install Visual Studio Code Extensions
+  when: vscode_extensions | length
+  ansible.builtin.command: "code --install-extension {{ item }} --force"
+  changed_when: item not in vscode_extensions_list.stdout_lines
+  loop: "{{ vscode_extensions }}"
+
+- name: Remove Visual Studio Code Extensions
+  when: vscode_extensions | length
+  ansible.builtin.command: "code --uninstall-extension {{ item }}"
+  changed_when: item in vscode_extensions_list.stdout_lines
+  loop: "{{ vscode_extensions_list.stdout_lines | ansible.builtin.difference(vscode_extensions) }}"
+
+- name: Update Visual Studio Code Settings
+  ansible.builtin.copy:
+    backup: "{{ vscode_settings_backup }}"
+    content: "{{ vscode_settings | to_nice_json }}"
+    dest: "{{ lookup('ansible.builtin.env', 'HOME') }}/Library/Application\ Support/Code/User/settings.json"
+    mode: 0644
+  when: vscode_settings.keys() | length
